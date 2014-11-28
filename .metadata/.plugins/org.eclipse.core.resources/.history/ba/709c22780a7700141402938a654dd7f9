@@ -1,0 +1,29 @@
+svg {
+	border: 1px solid black;
+}
+
+rect.handle {
+	stroke: blue;
+	cursor: ns-resize;
+}
+
+.axis {
+  shape-rendering: crispEdges;
+}
+
+.x.axis line {
+  stroke: #fff;
+}
+
+.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
