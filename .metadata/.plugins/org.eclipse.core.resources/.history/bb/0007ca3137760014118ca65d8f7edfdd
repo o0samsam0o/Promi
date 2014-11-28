@@ -1,0 +1,22 @@
+var margin = {top: 30, right: 40, bottom: 30, left: 50},
+    w = 1024 - margin.left - margin.right,
+    h = 800 - margin.top - margin.bottom;
+	
+var dataset = [5, 10, 15];
+	
+var width = 200,
+	height = 200,
+	dragbarw = 10;
+	
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h);
+    
+var newg = svg.append("g")
+			.data(dataset)
+			.append("rect")
+			.attr("width",  function(d) { return d; })
+			.attr("height", function(d) { return d; })
+			.attr("stroke", "black");
+
+      

@@ -1,0 +1,8 @@
+svg {
+	border: 1px solid black;
+}
+
+rect.handle {
+	stroke: blue;
+	cursor: ns-resize;
+}

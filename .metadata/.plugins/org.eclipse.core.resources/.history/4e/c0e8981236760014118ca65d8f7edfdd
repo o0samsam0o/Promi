@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <link type="text/css" href="mystyle.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <script type="text/javascript" src="mycode.js"></script>
+         <script>
+      $().click(function() {
+            dragbartop 
+              .attr("fill-opacity", 1.0)
+              .attr("cursor", ("ns-resize");
+            dragbarbottom 
+              .attr("fill-opacity", 0.5)
+              .attr("cursor", "ns-resize");
+      });
+    </script>
+    </body>
+</html>    

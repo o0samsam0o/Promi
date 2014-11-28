@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="d3.min.js"></script>
+		
+	</head>
+	<body>
+
+		<h1>My First Heading</h1>
+
+		<p>
+			My first paragraph.
+		</p>
+		
+		<script type="text/javascript" src="mycode.js"></script>
+
+	</body>
+</html>

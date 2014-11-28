@@ -1,0 +1,38 @@
+var margin = {top: 30, right: 40, bottom: 30, left: 50},
+    w = 1024 - margin.left - margin.right,
+    h = 800 - margin.top - margin.bottom;
+	
+var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13];
+	
+var width = 200,
+	height = 200,
+	dragbarw = 10;
+	
+var svg = d3.select("body").append("svg")
+		    .attr("width", w)
+		    .attr("height", h);
+    
+var newg = svg.selectAll("rect")
+			  .data(dataset)
+			  .enter()
+			  .append("g");
+   
+   
+var boxes = newg.append("rect")
+			   	.attr("x", function(d, i) {return i * (w / dataset.length);})
+			   	.attr("y", 0)
+			   	.attr("width", 20)
+			   	.attr("height", function(d) {return d;});
+			   	
+var dragtop = svg.selectAll("g")
+			  .data(dataset)
+				.append("rect")
+				  .attr("x", function(d) { return d.x + (width/2 - dragbarw/2); })
+      			  .attr("y", function(d) { return d.y - (dragbarw/2); })
+      			  .attr("width", dragbarw)
+			      .attr("height", dragbarw)       
+			      .attr("fill", "white") 
+			      .attr("fill-opacity", 0) 
+			      .attr("stroke", "black")
+			      .attr("stroke-width", 1)
+			      .attr("cursor", "ns-resize");

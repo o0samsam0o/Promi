@@ -1,0 +1,3 @@
+rect.dragleft {
+	cursor: n-resize;
+}

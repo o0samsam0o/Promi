@@ -1,0 +1,48 @@
+var margin = {top: 30, right: 40, bottom: 30, left: 50},
+    w = 1024 - margin.left - margin.right,
+    h = 800 - margin.top - margin.bottom;
+	
+var width = 200,
+	height = 200,
+	dragbarw = 10;
+	
+var svg = d3.select("body").append("svg")
+    .attr("width", w)
+    .attr("height", h);
+
+var newg = svg.append("g")
+      .data([{x: width / 2, y: height / 2}]);
+      
+var dragrect = newg.append("rect")
+      .attr("id", "active")
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .attr("height", height)
+      .attr("width", width)
+      .attr("fill", "lightgreen")
+      .attr("fill-opacity", .5);
+      
+var dragbartop = newg.append("rect")
+      .attr("x", function(d) { return d.x + (width/2 - dragbarw/2); })
+      .attr("y", function(d) { return d.y - (dragbarw/2); })
+      .attr("id", "dragleft")  
+      .attr("class", "handle")  
+      .attr("width", dragbarw)
+      .attr("height", dragbarw)       
+      .attr("fill", "white") 
+      .attr("fill-opacity", 0) 
+      .attr("cursor", "ns-resize")
+      .call(dragtop);
+
+var dragbarbottom = newg.append("rect")
+      .attr("x", function(d) { return d.x + (dragbarw/2); })
+      .attr("y", function(d) { return d.y + height - (dragbarw/2); })
+      .attr("id", "dragright")
+      .attr("width", width - dragbarw)
+      .attr("height", dragbarw)
+      .attr("fill", "white") 
+      .attr("fill-opacity", 0) 
+      .attr("stroke", "black")
+      .attr("stroke-width", 1)
+      .attr("cursor", "ns-resize")
+      .call(dragbottom);
