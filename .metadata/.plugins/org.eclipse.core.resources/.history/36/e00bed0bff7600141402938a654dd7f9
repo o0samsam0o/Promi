@@ -42,7 +42,7 @@ var lowerBoxes = newg.append("rect")
 		      	.attr("fill-opacity", .5);
 			   	
 var dragtop = newg.append("rect")
-				  .attr("x", function(d, i) {return i * (boxwidth + padding) + margin.left + boxwidth/2 - dragbarw/2;})
+				  .attr("x", function(d, i) {return i * (boxwidth/2 + dragbarw/2) + margin.left;})
       			  .attr("y", function(d, i) { return h/2 - (Math.abs(d.gain)) - dragbarw/2; })
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw)       
@@ -53,7 +53,7 @@ var dragtop = newg.append("rect")
 			      .attr("cursor", "ns-resize");
  			   
 var dragbottom = newg.append("rect")
-				  .attr("x", function(d, i) {return i * (boxwidth + padding) + margin.left + boxwidth/2 - dragbarw/2;})
+				  .attr("x", function(d, i) {return i * (boxwidth + padding) + margin.left;})
       			  .attr("y", function(d) { return h/2 + Math.abs(d.loss) - dragbarw/2; })
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw)       
