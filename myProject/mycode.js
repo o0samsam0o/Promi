@@ -14,6 +14,7 @@ var boxWidth = 100,
 
 var padding = 10;
 
+//drag behavior
 var dragTop = d3.behavior.drag()
 				.origin(Object)
 				.on("drag", tdragresize); 
@@ -77,6 +78,38 @@ var dragBarBottom = newg.append("rect")
 			      .attr("stroke-width", 1)
 			      .attr("cursor", "ns-resize")
 			      .call(dragBottom);
+
+
+
+//append axes
+var xScale = d3.scale.linear()
+                     .domain([0, 0])
+                     .range([0 ,w]);
+                     
+var yScale = d3.scale.linear()
+                     .domain([-100,100])
+                     .range([h, 0]);                    
+                         
+var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .orient("top");   
+                  
+var yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .orient("left");                   
+            
+svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate("+ margin.left + "," + h/2 + ")")
+        .style("stroke-dasharray", ("1, 3"))
+        .call(xAxis);
+
+svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate("+ margin.left + ", 0)")
+        .style("stroke-dasharray", ("1, 1"))
+        .call(yAxis);
+
 
 //upper drag function			      
 function tdragresize(d, i) {    

@@ -1,3 +1,17 @@
 svg {
 	border: 1px solid black;
 }
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  shape-rendering: crispEdges;
+  stroke: #000;
+}
+
+.axis .minor line {
+  stroke: #777;
+  stroke-dasharray: 2,2;
+}
