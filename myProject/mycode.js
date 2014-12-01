@@ -10,7 +10,7 @@ var dataset = [	{id: "1", unit: "kg", min: 15, norm: 30, max: 90, loss: -75, gai
 			   	{id: "6", unit: "kg", min: 15, norm: 30, max: 90, loss: -200, gain: 100, weight: 300}];
 	
 var boxWidth = 100,
-	dragbarw = 10;
+	dragbarw = 20;
 
 var padding = 10;
 
@@ -53,33 +53,50 @@ var lowerBoxes = newg.append("rect")
 		        .attr("class", "lowerbox")
 		      	.attr("fill", "lightpink")
 		      	.attr("fill-opacity", .5);
+
+//pattern for drag handles	(background-image)		   	
+var dragUpPattern = svg.append("defs")
+                          .append("pattern")
+                          .attr("id", "dragUpPattern")
+                          .attr("patternUnits", "objectBoundingBox")
+                          .attr("width", dragbarw)
+                          .attr("height", dragbarw)		
+                          .append("image")   
+                          .attr("width", dragbarw)
+                          .attr("height", dragbarw)  
+                          .attr("xlink:href", "img/arrow_up.png");
+                            
+var dragDownPattern = svg.append("defs")
+                          .append("pattern")
+                          .attr("id", "dragDownPattern")
+                          .attr("patternUnits", "objectBoundingBox")
+                          .attr("width", dragbarw)
+                          .attr("height", dragbarw)     
+                          .append("image")   
+                          .attr("width", dragbarw)
+                          .attr("height", dragbarw)  
+                          .attr("xlink:href", "img/arrow_down.png");    	
 			   	
 //append drag handles			   	
 var dragBarTop = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
-      			  .attr("y", function(d) { return h/2 - Math.abs(d.gain) - dragbarw/2; })
+      			  .attr("y", function(d) { return h/2 - Math.abs(d.gain); })
       			  .attr("width", dragbarw)
-			      .attr("height", dragbarw)       
-			      .attr("fill", "white") 
-			      .attr("fill-opacity", 0) 
-			      .attr("stroke", "black")
-			      .attr("stroke-width", 1)
+			      .attr("height", dragbarw) 
+			      //.style("stroke", "black")     
+			      .attr("fill", "url(#dragUpPattern)")      
 			      .attr("cursor", "ns-resize")
 			      .call(dragTop);
- 			   
+			       			   
 var dragBarBottom = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
-      			  .attr("y", function(d) { return h/2 + Math.abs(d.loss) - dragbarw/2; })
+      			  .attr("y", function(d) { return h/2 + Math.abs(d.loss) - dragbarw; })
       			  .attr("width", dragbarw)
-			      .attr("height", dragbarw)       
-			      .attr("fill", "white") 
-			      .attr("fill-opacity", 0) 
-			      .attr("stroke", "black")
-			      .attr("stroke-width", 1)
+			      .attr("height", dragbarw)     
+                  .attr("fill", "url(#dragDownPattern)")      
+                  .attr("cursor", "ns-resize")
 			      .attr("cursor", "ns-resize")
 			      .call(dragBottom);
-
-
 
 //append axes
 var xScale = d3.scale.linear()
@@ -116,14 +133,14 @@ function tdragresize(d, i) {
     var oldy = h/2 - (Math.abs(d.gain)),
         newy = d3.mouse(this)[1];    
     
-    d3.select(this).attr("y",  newy - dragbarw/2 );
+    d3.select(this).attr("y",  newy );
     d3.select(this.parentNode).select(".upperbox").attr("y",  newy);
     d3.select(this.parentNode).select(".upperbox").attr("height", Math.abs(d.gain) + oldy - newy);
 }
 
 //lower drag function
 function bdragresize(d) {    
-    d3.select(this).attr("y",  d3.mouse(this)[1] - dragbarw/2 );
+    d3.select(this).attr("y",  d3.mouse(this)[1] - dragbarw );
     d3.select(this.parentNode).select(".lowerbox").attr("height", d3.mouse(this)[1] -h/2);
 }
 

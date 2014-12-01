@@ -15,3 +15,7 @@ svg {
   stroke: #777;
   stroke-dasharray: 2,2;
 }
+
+.dragBarUp {
+	background-image: img/arrow_up.png
+}
