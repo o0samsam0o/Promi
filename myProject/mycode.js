@@ -14,10 +14,14 @@ var boxWidth = 100,
 
 var padding = 10;
 
+var isdragging = false;
+
 //drag behavior
 var dragTop = d3.behavior.drag()
 				.origin(Object)
-				.on("drag", tdragresize); 
+				.on("dragstart", function(d) {isdragging = true;})
+				.on("drag", tdragresize)
+				.on("dragend",  function(d) {isdragging = false;}); 
 				
 var dragBottom = d3.behavior.drag()
 				   .origin(Object)
@@ -135,7 +139,7 @@ svg.append("g")
 
 
 //upper drag function			      
-function tdragresize(d, i) {    
+function tdragresize(d, i) {   
     var oldy = h/2 - (Math.abs(d.gain)),
         newy = d3.mouse(this)[1];    
     
@@ -153,9 +157,18 @@ function bdragresize(d) {
 function mouseover() {
     d3.select(this).selectAll(".draghandle")
                     .style("visibility", "visible");
+                    
+    d3.select(this).selectAll("rect").attr("fill-opacity", 1);
 }
 
 function mouseout() {
+    if(isdragging){
     d3.select(this).selectAll(".draghandle")
-                    .style("visibility", "hidden");
+                    .style("visibility", "visible");
+                }else {                
+   d3.select(this).selectAll(".draghandle")
+                    .style("visibility", "hidden");  
+   
+   d3.select(this).selectAll("rect").attr("fill-opacity", .5);   
+                    }  
 }
