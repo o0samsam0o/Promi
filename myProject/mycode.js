@@ -9,12 +9,17 @@ var dataset = [	{id: "1", unit: "kg", min: 15, norm: 30, max: 90, loss: -75, gai
 			   	{id: "5", unit: "Min", min: 15, norm: 10, max: 5, loss: -25, gain: 50, weight: 75},
 			   	{id: "6", unit: "kg", min: 15, norm: 30, max: 90, loss: -200, gain: 100, weight: 300}];
 	
-var boxWidth = 100,
-	dragbarw = 20;
+var boxWidth = 150,
+	dragbarw = 20,
+	buttonWidth = 60,
+	buttonHeight = 15;
 
-var padding = 10;
+var padding = 15;
 
 var isdragging = false;
+
+var fullOpacity = 0.6,
+    lowOpacity = 0.4;
 
 //drag behavior
 var dragTop = d3.behavior.drag()
@@ -49,8 +54,8 @@ var upperBoxes = newg.append("rect")
 		      	.attr("height", function(d){return Math.abs(d.gain);})
 		        .attr("width",  boxWidth)
 		        .attr("class", "upperbox")
-		      	.attr("fill", "lightgreen")
-		      	.attr("fill-opacity", .5);
+		      	.attr("fill", "yellowgreen")
+		      	.attr("fill-opacity", lowOpacity);
 		      	
 var lowerBoxes = newg.append("rect")
 			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left;})
@@ -59,9 +64,33 @@ var lowerBoxes = newg.append("rect")
 		        .attr("width",  boxWidth)
 		        .attr("class", "lowerbox")
 		      	.attr("fill", "lightpink")
-		      	.attr("fill-opacity", .5);
+		      	.attr("fill-opacity", lowOpacity);
+		     
+//append Graph button
+var graphButton = newg.append("g")
+                .attr("class", "graphButton")
+                .style("visibility", "hidden")
+                .on("click", buttonClick);
 
-//pattern for drag handles	(background-image)		   	
+    graphButton.append("rect")
+                .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 ;})
+                .attr("y", function(d, i) { return (h - buttonHeight)/2; })
+                .attr("height", buttonHeight)
+                .attr("width",  buttonWidth)
+                .attr("rx", 5)
+                .attr("ry", 5)               
+                .style("fill", "white")
+                .style("stroke", "grey")
+                .style("fill-opacity", fullOpacity);
+                
+    graphButton.append("text")
+                .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 + buttonWidth/6;})
+                .attr("y", h/2 + buttonHeight/4)
+                .style("fill", "grey")
+                .style("font-size", 10)
+                .text("GRAPH");
+
+//background-image for drag handles			   	
 var dragUpPattern = svg.append("defs")
                           .append("pattern")
                           .attr("id", "dragUpPattern")
@@ -95,6 +124,7 @@ var dragBarTop = newg.append("rect")
 			      .attr("fill", "url(#dragUpPattern)")      
 			      .attr("cursor", "ns-resize")
 			      .style("visibility", "hidden")
+			      .style("fill-opacity", fullOpacity)
 			      .call(dragTop);
 			       			   
 var dragBarBottom = newg.append("rect")
@@ -107,6 +137,7 @@ var dragBarBottom = newg.append("rect")
                   .attr("cursor", "ns-resize")
 			      .attr("cursor", "ns-resize")
 			      .style("visibility", "hidden")
+			      .style("fill-opacity", fullOpacity)
 			      .call(dragBottom);
 
 //append axes
@@ -155,21 +186,29 @@ function bdragresize(d) {
     d3.select(this.parentNode).select(".lowerbox").attr("height", d3.mouse(this)[1] -h/2);
 }
 
+//mouse events
 function mouseover() {
-    d3.select(this).selectAll(".draghandle")
-                    .style("visibility", "visible");
-                    
-    d3.select(this).selectAll("rect").attr("fill-opacity", 1);
+                   
+    d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
+    
+    d3.select(this).selectAll(".draghandle").style("visibility", "visible");
+                        
+    d3.select(this).select(".graphButton")
+                        .style("visibility", "visible");                    
 }
 
 function mouseout() {
-    if(isdragging){
-    d3.select(this).selectAll(".draghandle")
-                    .style("visibility", "visible");
-                }else {                
-   d3.select(this).selectAll(".draghandle")
-                    .style("visibility", "hidden");  
-   
-   d3.select(this).selectAll("rect").attr("fill-opacity", .5);   
+    if(!isdragging){      
+        d3.select(this).selectAll(".draghandle")
+                       .style("visibility", "hidden");  
+                       
+        d3.select(this).select(".graphButton")
+                        .style("visibility", "hidden");
+               
+        d3.select(this).selectAll("rect").attr("fill-opacity", lowOpacity);      
                     }  
+}
+
+function buttonClick(d) {
+    d3.select(this).style("fill-opacity", 1);
 }
