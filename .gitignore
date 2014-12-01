@@ -2,3 +2,5 @@
 *.70
 *.xmi
 *.metadata
+*.index
+.metadata/.plugins/com.aptana.index.core/3266099502.index
