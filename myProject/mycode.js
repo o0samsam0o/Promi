@@ -70,7 +70,10 @@ var lowerBoxes = newg.append("rect")
 var graphButton = newg.append("g")
                 .attr("class", "graphButton")
                 .style("visibility", "hidden")
-                .on("click", buttonClick);
+                .attr("cursor", "pointer")
+                .on("mouseover", buttonMouseOver)
+                .on("click", buttonClick)
+                .on("mouseout", buttonMouseOut);
 
     graphButton.append("rect")
                 .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 ;})
@@ -135,7 +138,6 @@ var dragBarBottom = newg.append("rect")
 			      .attr("height", dragbarw)     
                   .attr("fill", "url(#dragDownPattern)")      
                   .attr("cursor", "ns-resize")
-			      .attr("cursor", "ns-resize")
 			      .style("visibility", "hidden")
 			      .style("fill-opacity", fullOpacity)
 			      .call(dragBottom);
@@ -187,8 +189,7 @@ function bdragresize(d) {
 }
 
 //mouse events
-function mouseover() {
-                   
+function mouseover() {                  
     d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
     
     d3.select(this).selectAll(".draghandle").style("visibility", "visible");
@@ -209,6 +210,14 @@ function mouseout() {
                     }  
 }
 
+function buttonMouseOver(d) {
+    d3.select(this).select("rect").style("fill-opacity", 1);
+}
+
+function buttonMouseOut(d) {
+    d3.select(this).select("rect").style("fill-opacity", .5);
+}
+
 function buttonClick(d) {
-    d3.select(this).style("fill-opacity", 1);
+    
 }
