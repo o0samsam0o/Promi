@@ -25,8 +25,9 @@ var dragTop = d3.behavior.drag()
 				
 var dragBottom = d3.behavior.drag()
 				   .origin(Object)
-				   .on("drag", bdragresize); 
-
+				   .on("dragstart", function(d) {isdragging = true;})
+				   .on("drag", bdragresize)
+				   .on("dragend",  function(d) {isdragging = false;}); 
 //add svg canvas
 var svg = d3.select("body").append("svg")
 		    .attr("width", w)
