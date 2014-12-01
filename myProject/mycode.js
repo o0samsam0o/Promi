@@ -33,7 +33,9 @@ var svg = d3.select("body").append("svg")
 var newg = svg.selectAll("rect")
 			  .data(dataset)
 			  .enter()
-			  .append("g");
+			  .append("g")
+			  .on("mouseover", mouseover)
+			  .on("mouseout", mouseout);
 
 //append boxes    
 var upperBoxes = newg.append("rect")
@@ -81,21 +83,25 @@ var dragDownPattern = svg.append("defs")
 var dragBarTop = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) { return h/2 - Math.abs(d.gain); })
+      			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw) 
 			      //.style("stroke", "black")     
 			      .attr("fill", "url(#dragUpPattern)")      
 			      .attr("cursor", "ns-resize")
+			      .style("visibility", "hidden")
 			      .call(dragTop);
 			       			   
 var dragBarBottom = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) { return h/2 + Math.abs(d.loss) - dragbarw; })
+      			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw)     
                   .attr("fill", "url(#dragDownPattern)")      
                   .attr("cursor", "ns-resize")
 			      .attr("cursor", "ns-resize")
+			      .style("visibility", "hidden")
 			      .call(dragBottom);
 
 //append axes
@@ -144,3 +150,12 @@ function bdragresize(d) {
     d3.select(this.parentNode).select(".lowerbox").attr("height", d3.mouse(this)[1] -h/2);
 }
 
+function mouseover() {
+    d3.select(this).selectAll(".draghandle")
+                    .style("visibility", "visible");
+}
+
+function mouseout() {
+    d3.select(this).selectAll(".draghandle")
+                    .style("visibility", "hidden");
+}
