@@ -2,20 +2,19 @@ svg {
 	border: 1px solid black;
 }
 
-.axis path {
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
   display: none;
 }
 
-.axis line {
-  shape-rendering: crispEdges;
-  stroke: #000;
-}
-
-.axis .minor line {
-  stroke: #777;
-  stroke-dasharray: 2,2;
-}
-
-.dragBarUp {
-	background-image: img/arrow_up.png
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
