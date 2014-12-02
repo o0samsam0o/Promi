@@ -2,19 +2,18 @@ svg {
 	border: 1px solid black;
 }
 
-.axis path,
-.axis line {
+.axis path{
   fill: none;
-  stroke: #000;
+  stroke: grey;
   shape-rendering: crispEdges;
-}
-
-.x.axis path {
-  display: none;
 }
 
 .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
+}
+
+.tick text {
+	fill: grey;
 }

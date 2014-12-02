@@ -167,7 +167,7 @@ svg.append("g")
 svg.append("g")
         .attr("class", "y axis")
         .attr("transform", "translate("+ margin.left + ", 0)")
-        .style("stroke-dasharray", ("1, 1"))
+        .style("stroke-dasharray", ("1, 3"))
         .call(yAxis);
 
 
