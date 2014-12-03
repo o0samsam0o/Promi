@@ -1,5 +1,7 @@
 svg {
 	border: 1px solid black;
+	display: block;
+	margin: 10px;
 }
 
 .axis path{
@@ -17,3 +19,4 @@ svg {
 .tick text {
 	fill: grey;
 }
+

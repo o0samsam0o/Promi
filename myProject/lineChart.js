@@ -1,12 +1,16 @@
-
-var lc_x = dataset.length*(boxWidth + padding) + margin.left,
-    lc_y = function(d){return h/2 - boxh/2;};
+// var data = [min:{x:15,y: -75}
+            // norm:{x: 30, y: 0x}
+            // max:{x: 90, y: 175}];
+ 
+ 
+var boxh = 400,
+    boxw = 400;
     
-var boxh = 300,
-    boxw = 300;
+var lc_x = dataset.length*(boxWidth + padding) + 2*margin.left,
+    lc_y = height/2 - boxh/2;
     
 var x = d3.scale.linear()
-    .domain([15, 90])
+    .domain([d3.min(dataset,function(d){return d.min;}), d3.max(dataset, function(d){return d.max;})])
     .range([0, boxw]);
 
 var y = d3.scale.linear()
@@ -39,18 +43,20 @@ var lineChart = svg.append("g")
         
      svg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate("+ lc_x + "," + (h/2 + boxh/2) + ")")
+          .attr("transform", "translate("+ lc_x + "," + (height/2 + boxh/2) + ")")
           .style("stroke-dasharray", ("1, 20"))
           .call(xAxis);
 
       svg.append("g")
           .attr("class", "y axis")
+          .attr("transform", "translate("+ lc_x + "," + lc_y + " )")
           .style("stroke-dasharray", ("1, 25"))
           .call(yAxis);
 
       svg.append("path")
           .attr("class", "line")
-          .attr("d", line(dataset));
+          .attr("transform", "translate("+ lc_x + "," + lc_y + ")")
+          .attr("d", line(data));
 
   
     
