@@ -3,12 +3,12 @@ var margin = {top: 20, right: 40, bottom: 20, left: 40};
 var width = 1600 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 	
-var dataset = [	{unit: "kg", min: 15, norm: 30, max: 90, loss: -75, gain: 175},
+var dataset = [	{unit: "kg", min: 15, norm: 30, max: 90, loss: -75, gain: 75},
 				{unit: "kg", min: 15, norm: 30, max: 90, loss: -50, gain: 50},
 				{unit: "kg", min: 15, norm: 30, max: 90, loss: -75, gain: 75},
 				{unit: "kg", min: 15, norm: 30, max: 90, loss: -50, gain: 25},				
 			   	{unit: "Min", min: 15, norm: 10, max: 5, loss: -25, gain: 50},
-			   	{unit: "kg", min: 15, norm: 30, max: 90, loss: -200, gain: 100}];
+			   	{unit: "kg", min: 15, norm: 30, max: 90, loss: -100, gain: 100}];
 	
 var axish = 400,
     boxWidth = 150,
@@ -36,6 +36,25 @@ var dragBottom = d3.behavior.drag()
 				   .on("drag", bdragresize)
 				   .on("dragend",  function(d) {isdragging = false;}); 
 				   
+//axes
+var xScale = d3.scale.linear()
+                     .domain([0, 0])
+                     .range([0 ,2*width]);
+                     
+var yScale = d3.scale.linear()
+                     .domain([-100,100])
+                     .range([height/2 + axish/2 , height/2 - axish/2]);                    
+                         
+var xAxis = d3.svg.axis()
+                  .scale(xScale)
+                  .tickSubdivide(3)
+                  .orient("top");   
+                  
+var yAxis = d3.svg.axis()
+                  .scale(yScale)
+                  .ticks(5)
+                  .orient("left");       
+				   
 //add svg canvas
 var svg = d3.select("body").append("svg")
 		    .attr("width", width)
@@ -53,8 +72,8 @@ var newg = svg.selectAll("rect")
 //append boxes    
 var upperBoxes = newg.append("rect")
 			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left;})
-      			.attr("y", function(d, i) { return height/2 - (Math.abs(d.gain)); })
-		      	.attr("height", function(d){return Math.abs(d.gain);})
+      			.attr("y", function(d, i) { return height/2 - yScale(Math.abs(d.gain)); })
+		      	.attr("height", function(d){return yScale(Math.abs(d.gain));})
 		        .attr("width",  boxWidth)
 		        .attr("class", "upperbox")
 		      	.attr("fill", "yellowgreen")
@@ -63,7 +82,7 @@ var upperBoxes = newg.append("rect")
 var lowerBoxes = newg.append("rect")
 			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left;})
       			.attr("y", function(d) { return height/2; })
-		      	.attr("height", function(d){return Math.abs(d.loss);})
+		      	.attr("height", function(d){return yScale(Math.abs(d.loss));})
 		        .attr("width",  boxWidth)
 		        .attr("class", "lowerbox")
 		      	.attr("fill", "lightpink")
@@ -121,7 +140,7 @@ var dragDownPattern = svg.append("defs")
 //append drag handles			   	
 var dragBarTop = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
-      			  .attr("y", function(d) { return height/2 - Math.abs(d.gain); })
+      			  .attr("y", function(d) { return height/2 - yScale(Math.abs(d.gain)); })
       			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw) 
@@ -134,7 +153,7 @@ var dragBarTop = newg.append("rect")
 			       			   
 var dragBarBottom = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
-      			  .attr("y", function(d) { return height/2 + Math.abs(d.loss) - dragbarw; })
+      			  .attr("y", function(d) { return height/2 + yScale(Math.abs(d.loss)) - dragbarw; })
       			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw)     
@@ -142,27 +161,9 @@ var dragBarBottom = newg.append("rect")
                   .attr("cursor", "ns-resize")
 			      .style("visibility", "hidden")
 			      .style("fill-opacity", fullOpacity)
-			      .call(dragBottom);
-
-//append axes
-var xScale = d3.scale.linear()
-                     .domain([0, 0])
-                     .range([0 ,2*width]);
-                     
-var yScale = d3.scale.linear()
-                     .domain([-100,100])
-                     .range([height/2 + axish/2 , height/2 - axish/2]);                    
-                         
-var xAxis = d3.svg.axis()
-                  .scale(xScale)
-                  .tickSubdivide(3)
-                  .orient("top");   
-                  
-var yAxis = d3.svg.axis()
-                  .scale(yScale)
-                  .ticks(5)
-                  .orient("left");                   
+			      .call(dragBottom);            
             
+//append axes
 svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate("+ margin.left + "," + height/2 + ")")
@@ -174,7 +175,6 @@ svg.append("g")
         .attr("transform", "translate("+ margin.left + ", 0)")
         .style("stroke-dasharray", ("1, 50"))
         .call(yAxis);
-
 
 //upper drag function			      
 function tdragresize(d, i) {   

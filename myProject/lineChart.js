@@ -55,6 +55,7 @@ var lineChart = svg.append("g")
           
      svg.append("path")
           .attr("class", "area")
+          .style("fill-opacity", fullOpacity)
           .attr("transform", "translate("+ lc_x + "," + lc_y + ")")
           .attr("d", area(data));
         
