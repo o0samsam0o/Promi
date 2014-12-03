@@ -93,7 +93,6 @@ var graphButton = newg.append("g")
                 .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 + buttonWidth/6;})
                 .attr("y", height/2 + buttonHeight/4)
                 .style("fill", "grey")
-                .style("font-size", 10)
                 .text("GRAPH");
 
 //background-image for drag handles			   	
@@ -194,13 +193,15 @@ function bdragresize(d) {
 }
 
 //mouse events
-function mouseover() {                  
+function mouseover() {
+    if(!isdragging) {                 
     d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
     
     d3.select(this).selectAll(".draghandle").style("visibility", "visible");
                         
     d3.select(this).select(".graphButton")
-                        .style("visibility", "visible");                    
+                        .style("visibility", "visible"); 
+    }                   
 }
 
 function mouseout() {

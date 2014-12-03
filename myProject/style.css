@@ -2,6 +2,7 @@ svg {
 	border: 1px solid black;
 	display: block;
 	margin: 10px;
+	font-size: 10px;
 }
 
 .axis path{
@@ -12,7 +13,7 @@ svg {
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: black;
   stroke-width: 1.5px;
 }
 
@@ -20,3 +21,7 @@ svg {
 	fill: grey;
 }
 
+.area {
+    fill: lightpink;
+    stroke-width: 0;
+}
