@@ -5,23 +5,36 @@ svg {
 	font-size: 10px;
 }
 
-.axis path{
+.axis line{
   fill: none;
   stroke: grey;
   shape-rendering: crispEdges;
 }
 
+.axis path{
+  fill: none;
+  stroke: none;
+}
+
 .line {
   fill: none;
   stroke: black;
-  stroke-width: 1.5px;
+  stroke-width: 1px;
 }
 
 .tick text {
 	fill: grey;
 }
 
-.area {
+.axis .minor {
+  stroke: red;
+  stroke-width: 0.4px;
+}
+
+.area.above {
+    fill: yellowgreen;
+}
+
+.area.below {
     fill: lightpink;
-    stroke-width: 0;
 }
