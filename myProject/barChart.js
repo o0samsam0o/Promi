@@ -98,7 +98,7 @@ var graphButton = newg.append("g")
                 .attr("cursor", "pointer")
                 .on("mousedown", buttonMouseDown)
                 .on("mouseup", buttonMouseUp)
-                .on("click", updateBoxHeight);
+                .on("click", updateLineChart);
 
     graphButton.append("rect")
                 .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + (boxWidth-buttonWidth)/2 ;})
@@ -215,6 +215,7 @@ function tdragresize(d) {
     d3.select(this).attr("y",  newy );
     d3.select(this.parentNode).select(".upperbox").attr("y",  newy);
     d3.select(this.parentNode).select(".upperbox").attr("height", Math.abs(d.gain) + oldy - newy);
+
 }
 
 //lower drag function
@@ -265,16 +266,14 @@ function updateLineChart(){
 }
 
 function updateBoxHeight(i, newHeight){
-    console.log("i: " + i);
     dataset[i].gain = newHeight;
-    console.log("gain: " + dataset[i].gain);
-    console.log("loss: " + dataset[i].loss);
-    console.log("height: " + newHeight);
     
     //selection starts with index=1 not 0
     i=i+1;
-    d3.select("g:nth-of-type(" + i +")").select(".upperdraghandle").attr("y",  yScale(newHeight));
-    d3.select("g:nth-of-type(" + i +")").select(".upperbox").attr("y",  yScale(newHeight));
-    d3.select("g:nth-of-type(" + i +")").select(".upperbox").attr("height", yScale(0) - yScale(newHeight));
+    d3.select("g:nth-of-type(" + i +")").select(".upperdraghandle").attr("y",  yScale(newHeight)); 
+    d3.select("g:nth-of-type(" + i +")").select(".upperbox").transition()
+                    .attr("y",  yScale(newHeight))
+                    .attr("height", yScale(0) - yScale(newHeight));
     
 }
+
