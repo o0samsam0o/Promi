@@ -229,6 +229,6 @@ function buttonMouseUp(d) {
     d3.select(this).select("rect").style("fill-opacity", .5);
 }
 
-function updateData(){
+function updateLineChart(){
     drawLineChart(data);
 }
