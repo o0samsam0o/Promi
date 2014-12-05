@@ -31,10 +31,6 @@ svg {
   stroke-width: 0.4px;
 }
 
-.area.above {
-    fill: yellowgreen;
-}
-
-.area.below {
+.area {
     fill: lightpink;
 }

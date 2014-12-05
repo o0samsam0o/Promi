@@ -9,6 +9,11 @@ var dataset = [	{unit: "kg", min: 15, norm: 30, max: 90, loss: -50, gain: 75},
 				{unit: "kg", min: 15, norm: 30, max: 90, loss: -50, gain: 25},				
 			   	{unit: "Min", min: 15, norm: 10, max: 5, loss: -25, gain: 50},
 			   	{unit: "kg", min: 15, norm: 30, max: 90, loss: -100, gain: 100}];
+			   	
+var data = [{attr:"min", x: 15, y: -75},
+            {attr:"norm", x: 30, y: 0},
+            {attr:"max", x: 90, y: 75}];
+    
 	
 var axish = 400,
     boxWidth = 150,
@@ -67,7 +72,7 @@ var newg = svg.selectAll("rect")
 
 //append boxes    
 var upperBoxes = newg.append("rect")
-			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left;})
+			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left;})
       			.attr("y", function(d, i) { return yScale(Math.abs(d.gain)); })
 		      	.attr("height", function(d){return (yScale(0) - yScale(Math.abs(d.gain))) ;})
 		        .attr("width",  boxWidth)
@@ -76,7 +81,7 @@ var upperBoxes = newg.append("rect")
 		      	.attr("fill-opacity", lowOpacity);
 		      	
 var lowerBoxes = newg.append("rect")
-			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left;})
+			   	.attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left;})
       			.attr("y", yScale(0))
 		      	.attr("height", function(d){return (yScale(0) - yScale(Math.abs(d.loss)));})
 		        .attr("width",  boxWidth)
@@ -94,7 +99,7 @@ var graphButton = newg.append("g")
                 .on("click", updateData);
 
     graphButton.append("rect")
-                .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 ;})
+                .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + (boxWidth-buttonWidth)/2 ;})
                 .attr("y", yScale(0) - buttonHeight/2)
                 .attr("height", buttonHeight)
                 .attr("width",  buttonWidth)
@@ -105,7 +110,7 @@ var graphButton = newg.append("g")
                 .style("fill-opacity", fullOpacity);
                 
     graphButton.append("text")
-                .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + (boxWidth-buttonWidth)/2 + buttonWidth/6;})
+                .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + (boxWidth-buttonWidth)/2 + buttonWidth/6;})
                 .attr("y", height/2 + buttonHeight/4)
                 .style("fill", "grey")
                 .text("GRAPH");
@@ -135,7 +140,7 @@ var dragDownPattern = svg.append("defs")
 			   	
 //append drag handles			   	
 var dragBarTop = newg.append("rect")
-				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
+				  .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) { return yScale(d.gain); })
       			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
@@ -148,7 +153,7 @@ var dragBarTop = newg.append("rect")
 			      .call(dragTop);
 			       			   
 var dragBarBottom = newg.append("rect")
-				  .attr("x", function(d, i) {return i * (boxWidth + padding) + margin.left + boxWidth/2 - dragbarw/2;})
+				  .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) {return yScale(d.loss) - dragbarw;})
       			  .attr("class", "draghandle")
       			  .attr("width", dragbarw)
@@ -224,6 +229,6 @@ function buttonMouseUp(d) {
     d3.select(this).select("rect").style("fill-opacity", .5);
 }
 
-function updateData(d){
-    
+function updateData(){
+    drawLineChart(data);
 }
