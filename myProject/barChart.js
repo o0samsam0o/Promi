@@ -34,15 +34,15 @@ var fullOpacity = 0.6,
 //drag behavior
 var dragTop = d3.behavior.drag()
 				.origin(Object)
-				.on("dragstart", function(d) {isdragging = true;})
+				.on("dragstart", dragstart)
 				.on("drag", tdragresize)
-				.on("dragend",  function(d) {isdragging = false;}); 
+				.on("dragend", dragend); 
 				
 var dragBottom = d3.behavior.drag()
 				   .origin(Object)
-				   .on("dragstart", function(d) {isdragging = true;})
+				   .on("dragstart", dragstart)
 				   .on("drag", bdragresize)
-				   .on("dragend",  function(d) {isdragging = false;}); 
+				   .on("dragend", dragend); 
 				   
 //axes
                      
@@ -54,7 +54,9 @@ var yAxis = d3.svg.axis()
                   .scale(yScale)
                   .ticks(5)
                   .tickSize(15)
-                  .orient("left");       
+                  .orient("left");      
+                  
+var count = (function(d, i){return i;}) ;
 				   
 //add svg canvas
 var svg = d3.select("body").append("svg")
@@ -96,7 +98,7 @@ var graphButton = newg.append("g")
                 .attr("cursor", "pointer")
                 .on("mousedown", buttonMouseDown)
                 .on("mouseup", buttonMouseUp)
-                .on("click", updateData);
+                .on("click", updateBoxHeight);
 
     graphButton.append("rect")
                 .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + (boxWidth-buttonWidth)/2 ;})
@@ -142,7 +144,7 @@ var dragDownPattern = svg.append("defs")
 var dragBarTop = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) { return yScale(d.gain); })
-      			  .attr("class", "draghandle")
+      			  .attr("class", "upperdraghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw) 
 			      //.style("stroke", "black")     
@@ -155,7 +157,7 @@ var dragBarTop = newg.append("rect")
 var dragBarBottom = newg.append("rect")
 				  .attr("x", function(d, i) {return i * (boxWidth + padding) + 2*margin.left + boxWidth/2 - dragbarw/2;})
       			  .attr("y", function(d) {return yScale(d.loss) - dragbarw;})
-      			  .attr("class", "draghandle")
+      			  .attr("class", "lowerdraghandle")
       			  .attr("width", dragbarw)
 			      .attr("height", dragbarw)     
                   .attr("fill", "url(#dragDownPattern)")      
@@ -163,6 +165,20 @@ var dragBarBottom = newg.append("rect")
 			      .style("visibility", "hidden")
 			      .style("fill-opacity", fullOpacity)
 			      .call(dragBottom);            
+
+//input boxes			      
+var inputBoxes = d3.select("body")
+                    .data(dataset)
+                    .enter()
+                    .append("input")
+                    .attr("type","number")
+                    .attr("x", function(d,i){return i*(boxWidth + padding) + margin.left;} )
+                    .attr("y", "100px")
+                    .attr("min", 0)
+                    .attr("max", 100)
+                    .attr("step","5")
+                    .attr("value", function(d){return d.gain;}) 
+                    .on("input", function(d, i) {updateBoxHeight(i, +this.value);});	      
             
 //append axes
 svg.append("line")                      //x-Axis
@@ -180,11 +196,22 @@ svg.append("g")                         //y-Axis
         .style("stroke-dasharray", ("1, 2"))
         .call(yAxis);
 
+
+
+//drag functions
+function dragstart(){
+     isdragging = true;
+}
+
+function dragend(){
+     isdragging = false;
+}
+
 //upper drag function			      
 function tdragresize(d) {   
     var oldy = height/2 - (Math.abs(d.gain)),
         newy = d3.mouse(this)[1];    
-    
+
     d3.select(this).attr("y",  newy );
     d3.select(this.parentNode).select(".upperbox").attr("y",  newy);
     d3.select(this.parentNode).select(".upperbox").attr("height", Math.abs(d.gain) + oldy - newy);
@@ -201,7 +228,8 @@ function mouseover() {
     if(!isdragging) {                 
     d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
     
-    d3.select(this).selectAll(".draghandle").style("visibility", "visible");
+    d3.select(this).selectAll(".upperdraghandle").style("visibility", "visible");
+    d3.select(this).selectAll(".lowerdraghandle").style("visibility", "visible");
                         
     d3.select(this).select(".graphButton")
                         .style("visibility", "visible"); 
@@ -210,7 +238,10 @@ function mouseover() {
 
 function mouseout() {
     if(!isdragging){      
-        d3.select(this).selectAll(".draghandle")
+        d3.select(this).selectAll(".upperdraghandle")
+                       .style("visibility", "hidden");  
+                       
+        d3.select(this).selectAll(".lowerdraghandle")
                        .style("visibility", "hidden");  
                        
         d3.select(this).select(".graphButton")
@@ -231,4 +262,19 @@ function buttonMouseUp(d) {
 
 function updateLineChart(){
     drawLineChart(data);
+}
+
+function updateBoxHeight(i, newHeight){
+    console.log("i: " + i);
+    dataset[i].gain = newHeight;
+    console.log("gain: " + dataset[i].gain);
+    console.log("loss: " + dataset[i].loss);
+    console.log("height: " + newHeight);
+    
+    //selection starts with index=1 not 0
+    i=i+1;
+    d3.select("g:nth-of-type(" + i +")").select(".upperdraghandle").attr("y",  yScale(newHeight));
+    d3.select("g:nth-of-type(" + i +")").select(".upperbox").attr("y",  yScale(newHeight));
+    d3.select("g:nth-of-type(" + i +")").select(".upperbox").attr("height", yScale(0) - yScale(newHeight));
+    
 }
