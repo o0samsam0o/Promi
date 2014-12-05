@@ -181,7 +181,7 @@ svg.append("g")                         //y-Axis
         .call(yAxis);
 
 //upper drag function			      
-function tdragresize(d, i) {   
+function tdragresize(d) {   
     var oldy = height/2 - (Math.abs(d.gain)),
         newy = d3.mouse(this)[1];    
     
