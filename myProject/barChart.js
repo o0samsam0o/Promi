@@ -262,21 +262,6 @@ svg.append("g")//y-Axis
     .style("stroke-dasharray", ("1, 2"))
     .call(yAxis);
 
-
-    
-  
-//draw grid for snapping
-var grid = 10;  
-
-for(var i = 0; i < 11; i++){
-    svg.append("line")
-        .attr("x1", margin.left)
-        .attr("y1", yScale(i * -100/grid))
-        .attr("x2", margin.left + width)
-        .attr("y2", yScale(i * -100/grid))
-        .style("stroke", "grey");
-}
-
 //drag functions
 function dragstart() {
     isdragging = true;
@@ -286,7 +271,9 @@ function dragend() {
     isdragging = false;
 }
 
-//upper drag function
+//upper drag function  
+var grid = 10;  //distance for snapping
+
 function tdragresize(d) {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid);
@@ -300,9 +287,10 @@ function tdragresize(d) {
 //lower drag function
 function bdragresize(d) {
     var mousey = yScale.invert(d3.mouse(this)[1]);
-    d3.select(this).attr("y", d3.mouse(this)[1] - dragbarw);
+    
+    d3.select(this).attr("y", yScale(Math.round(mousey / grid) * grid) - dragbarw);
     d3.select(this.parentNode).select(".lowerbox")
-        .attr("height", d3.mouse(this)[1] - height / 2);
+        .attr("height", yScale(Math.round(mousey / grid) * grid) - yScale(0));
 }
 
 //mouse events
