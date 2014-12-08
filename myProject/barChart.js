@@ -294,11 +294,14 @@ function tdragresize(d) {
 
 //lower drag function
 function bdragresize(d) {
-    var mousey = yScale.invert(d3.mouse(this)[1]);
+    var mousey = yScale.invert(d3.mouse(this)[1]),
+        newy = yScale(Math.round(mousey / grid) * grid),
+        maxHeight = Math.min(yScale(-100), Math.max(newy, yScale(-10)) ),
+        newHeight = maxHeight - yScale(0);
     
-    d3.select(this).attr("y", yScale(Math.round(mousey / grid) * grid) - dragbarw);
+    d3.select(this).attr("y", maxHeight - dragbarw);
     d3.select(this.parentNode).select(".lowerbox")
-        .attr("height", yScale(Math.round(mousey / grid) * grid) - yScale(0));
+        .attr("height", newHeight);
 }
 
 //mouse events
