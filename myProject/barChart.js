@@ -279,13 +279,14 @@ var grid = 10;  //distance for snapping
 function tdragresize(d) {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
-        newHeight =  yScale(0) - newy;
+        maxNewy = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper and lower boundary
+        newHeight =  yScale(0) - maxNewy;
         
     var id = d3.select(this.parentNode).select(".upperbox").attr("id");
 
-    d3.select(this).attr("y", newy);
+    d3.select(this).attr("y", maxNewy);
     d3.select(this.parentNode).select(".upperbox")
-        .attr("y", newy)
+        .attr("y", maxNewy)
         .attr("height", newHeight);
           
    updateInputBoxes(id, newHeight);
