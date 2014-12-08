@@ -137,6 +137,7 @@ var upperBoxes = newg.append("rect")
         return (yScale(0) - yScale(Math.abs(d.gain)));})
     .attr("width", boxWidth)
     .attr("class", "upperbox")
+    .attr("id", function(d, i) {return "upperbox" + i;})
     .attr("fill", "yellowgreen")
     .attr("fill-opacity", lowOpacity);
 
@@ -238,6 +239,7 @@ var inputBoxes = d3.select("body")
     .data(dataset).enter()
     .append("input")
     .attr("type", "number")
+    .attr("id", function(d, i) {return "input_upperbox" + i;})
     .attr("x", function(d, i) { return i * (boxWidth + padding) + margin.left;})
     .attr("y", "100px")
     .attr("min", 0)
@@ -276,12 +278,17 @@ var grid = 10;  //distance for snapping
 
 function tdragresize(d) {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
-        newy = yScale(Math.round(mousey / grid) * grid);
+        newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
+        newHeight =  yScale(0) - newy;
+        
+    var id = d3.select(this.parentNode).select(".upperbox").attr("id");
 
     d3.select(this).attr("y", newy);
     d3.select(this.parentNode).select(".upperbox")
         .attr("y", newy)
-        .attr("height",yScale(0) - newy);
+        .attr("height", newHeight);
+          
+   updateInputBoxes(id, newHeight);
 }
 
 //lower drag function
@@ -347,6 +354,14 @@ function updateUpperBoxHeight(i, newHeight) {
     d3.select("g:nth-of-type(" + i + ")").select(".upperbox").transition()
         .attr("y", yScale(newHeight))
         .attr("height", yScale(0) - yScale(newHeight));
+}
 
+function updateInputBoxes(i, value){
+    value = Math.round(value/2); //TODO rethink
+    
+    d3.select("#input_" + i).attr("value", value);
+    
+    console.log("value: " + value);
+    console.log("type: " + d3.select("#input_" + i));
 }
 
