@@ -29,15 +29,6 @@ function drawLineChart(d) {
     var lineChart = svg.append("g")
         .attr("class", "lineChart");
 
-    lineChart.append("rect")
-        .attr("x", lc_x)
-        .attr("y", lc_y)
-        .attr("width", lChartWidth)
-        .attr("height", lChartHeight)
-        .style("fill", "none")
-        .style("stroke", "grey")
-        .style("shape-rendering", "crispEdges");
-
     lineChart.append("path")
         .attr("class", "line")
         .attr("transform", "translate(" + lc_x + ", 0)")
@@ -71,6 +62,15 @@ function drawLineChart(d) {
         .attr("transform", "translate(" + lc_x + ", 0)")
         .style("stroke-dasharray", ("1, 25"))
         .call(yAxis);
+           
+    lineChart.append("rect")
+        .attr("x", lc_x)
+        .attr("y", lc_y)
+        .attr("width", lChartWidth)
+        .attr("height", lChartHeight)
+        .style("fill", "none")
+        .style("stroke", "grey")
+        .style("shape-rendering", "crispEdges");
 
 }
 

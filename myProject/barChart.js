@@ -279,13 +279,13 @@ var grid = 10;  //distance for snapping
 function tdragresize(d) {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
-        maxNewy = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper and lower boundary
+        maxNewy = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
         newHeight =  yScale(0) - maxNewy;
         
     var id = d3.select(this.parentNode).select(".upperbox").attr("id");
 
-    d3.select(this).attr("y", maxNewy);
-    d3.select(this.parentNode).select(".upperbox")
+    d3.select(this).attr("y", maxNewy);              //new drag handle position   
+    d3.select(this.parentNode).select(".upperbox")  //new box height and position
         .attr("y", maxNewy)
         .attr("height", newHeight);
           
@@ -294,19 +294,20 @@ function tdragresize(d) {
 
 //lower drag function
 function bdragresize(d) {
-    var mousey = yScale.invert(d3.mouse(this)[1]),
-        newy = yScale(Math.round(mousey / grid) * grid),
-        maxHeight = Math.min(yScale(-100), Math.max(newy, yScale(-10)) ),
+    var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
+        newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
+        maxHeight = Math.min(yScale(-100), Math.max(newy, yScale(-10)) ), //upper(100) and lower(10) boundary
         newHeight = maxHeight - yScale(0);
     
-    d3.select(this).attr("y", maxHeight - dragbarw);
-    d3.select(this.parentNode).select(".lowerbox")
+    d3.select(this).attr("y", maxHeight - dragbarw); //new drag handle position
+    d3.select(this.parentNode).select(".lowerbox")   //new box height
         .attr("height", newHeight);
 }
-
+                                                                                
 //mouse events
 function mouseover() {
     if (!isdragging) {
+        //make handles visible and change opacity
         d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
 
         d3.select(this).selectAll(".upperdraghandle")
@@ -320,6 +321,7 @@ function mouseover() {
 
 function mouseout() {
     if (!isdragging) {
+        //make handles invisible and change opacity
         d3.select(this).selectAll(".upperdraghandle")
             .style("visibility", "hidden");
 
@@ -350,22 +352,21 @@ function updateLineChart() {
 function updateUpperBoxHeight(i, newHeight) {
     dataset[i].gain = newHeight;
 
-    //selection starts with index=1 not 0
+    //selection starts with index = 1 not 0
     i = i + 1;
     d3.select("g:nth-of-type(" + i + ")").select(".upperdraghandle")
-        .attr("y", yScale(newHeight));
+        .transition().attr("y", yScale(newHeight));
 
     d3.select("g:nth-of-type(" + i + ")").select(".upperbox").transition()
         .attr("y", yScale(newHeight))
         .attr("height", yScale(0) - yScale(newHeight));
+
 }
 
 function updateInputBoxes(i, value){
     value = Math.round(value/2); //TODO rethink
     
     d3.select("#input_" + i).attr("value", value);
-    
-    console.log("value: " + value);
-    console.log("type: " + d3.select("#input_" + i));
+
 }
 
