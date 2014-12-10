@@ -14,12 +14,16 @@ var axish = 400,
     buttonWidth = 60,
     buttonHeight = 15;
 
-var lChartHeight = 400,
-    lChartWidth = 400;
+var lChartHeight = 300,
+    lChartWidth = 300;
+    
+var minyAxis = -100,
+    maxyAxis = 100;
 
 var padding = 15;
 
-var isdragging = false;
+var isdragging = false,
+    showLineChart = false;
 
 var fullOpacity = 0.6,
     lowOpacity = 0.4;
@@ -41,7 +45,7 @@ var dragBottom = d3.behavior
 //axes
 
 var yScale = d3.scale.linear()
-    .domain([-100, 100])
+    .domain([minyAxis, maxyAxis])
     .range([height / 2 + lChartHeight / 2, height / 2 - lChartHeight / 2]);
 
 var yAxis = d3.svg.axis()
@@ -49,10 +53,6 @@ var yAxis = d3.svg.axis()
     .ticks(5)
     .tickSize(15)
     .orient("left");
-
-var count = (function(d, i) {
-    return i;
-});
 
 //add svg canvas
 var svg = d3.select("body")
@@ -188,7 +188,7 @@ var inputBoxes = d3.select("body")
     .attr("max", 100)
     .attr("step", "5")
     .attr("value", function(d) { return d.gain;})
-    .on("input", function(d, i) { return updateUpperBoxHeight(i, +this.value);});
+    .on("input", function(d, i) { return updateUpperBoxHeight(i, this.value);});
 
 //append axes
 svg.append("line")//x-Axis
@@ -218,11 +218,15 @@ function dragend() {
 //upper drag function  
 var grid = 10;  //distance for snapping
 
-function tdragresize(d) {
+function tdragresize() {
+    var index = dataset.indexOf(this.__data__);
+    
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
         maxNewy = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
         newHeight =  yScale(0) - maxNewy;
+    
+    var newValue = (newHeight * maxyAxis) / (lChartHeight/2) ;
         
     var id = d3.select(this.parentNode).select(".upperbox").attr("id");
 
@@ -230,20 +234,30 @@ function tdragresize(d) {
     d3.select(this.parentNode).select(".upperbox")  //new box height and position
         .attr("y", maxNewy)
         .attr("height", newHeight);
-          
-   updateInputBoxes(id, newHeight);
+   
+   dataset[index].gain = newValue;
+   updateInputBoxes(id, newValue);
+   updateLineChart(index);
 }
 
 //lower drag function
-function bdragresize(d) {
+function bdragresize() {
+    var index = dataset.indexOf(this.__data__);
+    
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
         maxHeight = Math.min(yScale(-100), Math.max(newy, yScale(-10)) ), //upper(100) and lower(10) boundary
         newHeight = maxHeight - yScale(0);
+        
+    var newValue = (newHeight * minyAxis) / (lChartHeight/2) ;
     
     d3.select(this).attr("y", maxHeight - dragbarw); //new drag handle position
     d3.select(this.parentNode).select(".lowerbox")   //new box height
         .attr("height", newHeight);
+    
+    dataset[index].loss = newValue;    
+    console.log(newValue);
+    updateLineChart(index);
 }
                                                                                 
 //mouse events
@@ -288,12 +302,10 @@ function buttonMouseUp(d) {
 }
 
 function updateLineChart(index) {
-
     drawLineChart(index);
 }
                                                                                 
 function updateUpperBoxHeight(i, newHeight) {
-    dataset[i].gain = newHeight;
     updateLineChart(i);
 
     //selection starts with index = 1 not 0
@@ -308,7 +320,6 @@ function updateUpperBoxHeight(i, newHeight) {
 }
 
 function updateInputBoxes(i, value){
-    value = Math.round(value/2); //TODO rethink
     
     d3.select("#input_" + i).attr("value", value);
 
