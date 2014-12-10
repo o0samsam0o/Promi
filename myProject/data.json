@@ -1,0 +1,43 @@
+var dataset = [{
+    unit : "kg",
+    min : 15,
+    norm : 30,
+    max : 90,
+    loss : -50,
+    gain : 75
+}, {
+    unit : "kg",
+      min : 15,
+    norm : 30,
+    max : 90,
+    loss : -50,
+    gain : 75
+}, {
+    unit : "kg",
+    min : -10,
+    norm : 30,
+    max : 90,
+    loss : -75,
+    gain : 75
+}, {
+    unit : "kg",
+    min : 15,
+    norm : 30,
+    max : 90,
+    loss : -50,
+    gain : 25
+}, {
+    unit : "Min",
+    min : 15,
+    norm : 30,
+    max : 90,
+    loss : -10,
+    gain : 50
+}, {
+    unit : "kg",
+    min : 15,
+    norm : 30,
+    max : 90,
+    loss : -100,
+    gain : 100
+}];

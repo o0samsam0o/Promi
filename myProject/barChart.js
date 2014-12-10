@@ -8,64 +8,6 @@ var margin = {
 var width = 1600 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var dataset = [{
-    unit : "kg",
-    min : 15,
-    norm : 30,
-    max : 90,
-    loss : -50,
-    gain : 75
-}, {
-    unit : "kg",
-    min : 15,
-    norm : 30,
-    max : 90,
-    loss : -25,
-    gain : 50
-}, {
-    unit : "kg",
-    min : 15,
-    norm : 30,
-    max : 90,
-    loss : -75,
-    gain : 75
-}, {
-    unit : "kg",
-    min : 15,
-    norm : 30,
-    max : 90,
-    loss : -50,
-    gain : 25
-}, {
-    unit : "Min",
-    min : 15,
-    norm : 10,
-    max : 5,
-    loss : -25,
-    gain : 50
-}, {
-    unit : "kg",
-    min : 15,
-    norm : 30,
-    max : 90,
-    loss : -100,
-    gain : 100
-}];
-
-var data = [{
-    attr : "min",
-    x : 15,
-    y : -75
-}, {
-    attr : "norm",
-    x : 30,
-    y : 0
-}, {
-    attr : "max",
-    x : 90,
-    y : 75
-}];
-
 var axish = 400,
     boxWidth = 150,
     dragbarw = 20,
@@ -159,7 +101,7 @@ var graphButton = newg.append("g")
     .attr("cursor", "pointer")
     .on("mousedown", buttonMouseDown)
     .on("mouseup", buttonMouseUp)
-    .on("click", updateLineChart);
+    .on("click", function(d,i){return updateLineChart(i);});
 
 graphButton.append("rect")
     .attr("x", function(d, i) { 
@@ -246,7 +188,7 @@ var inputBoxes = d3.select("body")
     .attr("max", 100)
     .attr("step", "5")
     .attr("value", function(d) { return d.gain;})
-    .on("input", function(d, i) {updateUpperBoxHeight(i, +this.value);});
+    .on("input", function(d, i) { return updateUpperBoxHeight(i, +this.value);});
 
 //append axes
 svg.append("line")//x-Axis
@@ -345,12 +287,14 @@ function buttonMouseUp(d) {
     d3.select(this).select("rect").style("fill-opacity", .5);
 }
 
-function updateLineChart() {
-    drawLineChart(data);
+function updateLineChart(index) {
+
+    drawLineChart(index);
 }
                                                                                 
 function updateUpperBoxHeight(i, newHeight) {
     dataset[i].gain = newHeight;
+    updateLineChart(i);
 
     //selection starts with index = 1 not 0
     i = i + 1;
@@ -360,7 +304,7 @@ function updateUpperBoxHeight(i, newHeight) {
     d3.select("g:nth-of-type(" + i + ")").select(".upperbox").transition()
         .attr("y", yScale(newHeight))
         .attr("height", yScale(0) - yScale(newHeight));
-
+   
 }
 
 function updateInputBoxes(i, value){

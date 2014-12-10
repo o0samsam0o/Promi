@@ -1,6 +1,19 @@
-function drawLineChart(d) {
+function drawLineChart(i) {
+
+var data = [{
+    x : dataset[i].min,
+    y : dataset[i].loss
+}, {
+    x : dataset[i].norm,
+    y : 0
+}, {
+    x : dataset[i].max,
+    y : dataset[i].gain
+}];
+
 
     //remove old lineChart before drawing new
+    
     svg.selectAll("g.lineChart").remove();
 
     var lc_x = dataset.length * (boxWidth + padding) + 3 * margin.left,
@@ -14,7 +27,7 @@ function drawLineChart(d) {
     var xAxis = d3.svg.axis()
         .scale(xScale)
         .orient("bottom");
-
+   
     //filled area under line path
     var area = d3.svg.area()
         .x(function(d) {return xScale(d.x);})
