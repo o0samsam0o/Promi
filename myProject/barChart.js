@@ -27,6 +27,12 @@ var isdragging = false,
 
 var fullOpacity = 0.6,
     lowOpacity = 0.4;
+    
+//colors
+var gras = d3.rgb(229, 236, 198),
+    grasDark = d3.rgb(215, 226, 167),
+    yelly = d3.rgb(245, 227, 228),
+    yellyDark = d3.rgb(240, 213, 212);
 
 //drag behavior
 var dragTop = d3.behavior.drag()
@@ -80,8 +86,7 @@ var upperBoxes = newg.append("rect")
     .attr("width", boxWidth)
     .attr("class", "upperbox")
     .attr("id", function(d, i) {return "upperbox" + i;})
-    .attr("fill", "yellowgreen")
-    .attr("fill-opacity", lowOpacity);
+    .attr("fill", gras);
 
 var lowerBoxes = newg.append("rect")
     .attr("x", function(d, i) { 
@@ -91,8 +96,7 @@ var lowerBoxes = newg.append("rect")
         return (yScale(0) - yScale(Math.abs(d.loss)));})
     .attr("width", boxWidth)
     .attr("class", "lowerbox")
-    .attr("fill", "lightpink")
-    .attr("fill-opacity", lowOpacity);
+    .attr("fill", yelly);
 
 //append Graph button
 var graphButton = newg.append("g")
@@ -256,15 +260,15 @@ function bdragresize() {
         .attr("height", newHeight);
     
     dataset[index].loss = newValue;    
-    console.log(newValue);
     updateLineChart(index);
 }
                                                                                 
 //mouse events
 function mouseover() {
     if (!isdragging) {
-        //make handles visible and change opacity
-        d3.select(this).selectAll("rect").attr("fill-opacity", fullOpacity);
+        //make handles visible and change color
+        d3.select(this).select(".upperbox").attr("fill", grasDark);
+        d3.select(this).select(".lowerbox").attr("fill", yellyDark);
 
         d3.select(this).selectAll(".upperdraghandle")
             .style("visibility", "visible");
@@ -287,8 +291,8 @@ function mouseout() {
         d3.select(this).select(".graphButton")
             .style("visibility", "hidden");
 
-        d3.select(this).selectAll("rect")
-            .attr("fill-opacity", lowOpacity);
+        d3.select(this).select(".upperbox").attr("fill", gras);
+        d3.select(this).select(".lowerbox").attr("fill", yelly);
     }
 }
 

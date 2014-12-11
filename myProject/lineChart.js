@@ -1,6 +1,6 @@
 function drawLineChart(i) {
 
-var data = [{
+var selectedData = [{
     x : dataset[i].min,
     y : dataset[i].loss
 }, {
@@ -11,9 +11,7 @@ var data = [{
     y : dataset[i].gain
 }];
 
-
-    //remove old lineChart before drawing new
-    
+    //remove old lineChart before drawing new    
     svg.selectAll("g.lineChart").remove();
 
     var lc_x = dataset.length * (boxWidth + padding) + 3 * margin.left,
@@ -21,7 +19,7 @@ var data = [{
 
     //x axis
     var xScale = d3.scale.linear()
-        .domain(d3.extent(data, function(d) {return d.x;}))
+        .domain(d3.extent(selectedData, function(d) {return d.x;}))
         .range([0, lChartWidth]);
 
     var xAxis = d3.svg.axis()
@@ -39,19 +37,37 @@ var data = [{
         .y(function(d) {return yScale(d.y);});
 
     //bring all the pieces together
-    var lineChart = svg.append("g")
+    var lineChart = svg.append("g")        
         .attr("class", "lineChart");
-
+        
     lineChart.append("path")
-        .attr("class", "line")
-        .attr("transform", "translate(" + lc_x + ", 0)")
-        .attr("d", line(data));
+        .attr("class", "line")       
+        .attr("transform", "translate(" + lc_x + ", 0)")       
+        .attr("d", line(selectedData));
+        
+        // Set the threshold
+    svg.append("linearGradient")                    
+        .attr("id", "area-gradient")                
+        .attr("gradientUnits", "userSpaceOnUse")    
+        .attr("x1", xScale(0)).attr("y1", yScale(-100))             
+        .attr("x2", xScale(0)).attr("y2", yScale(100))          
+    .selectAll("stop")                              
+        .data([                                     
+            {offset: "0%", color: yellyDark},    
+            {offset: "50%", color: yellyDark},   
+            {offset: "50%", color: grasDark},  
+            {offset: "100%", color: grasDark}  
+        ])                                          
+    .enter().append("stop")                         
+        .attr("offset", function(d) { return d.offset; })       
+        .attr("stop-color", function(d) { return d.color; });   
 
-    lineChart.append("path")
+    lineChart.append("path")   
+        .datum(selectedData)  
         .attr("class", "area")
-        .style("fill-opacity", fullOpacity)
-        .attr("transform", "translate(" + lc_x + ", 0)")
-        .attr("d", area(data));
+        .attr("transform", "translate(" + lc_x + ", 0)")            
+        .attr("d", area);
+
 
     //norm-line
     lineChart.append("line")
