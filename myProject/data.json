@@ -1,6 +1,6 @@
 var dataset = [{
     unit : "kg",
-    min : 15,
+    min : 40,
     norm : 30,
     max : 90,
     loss : -50,
