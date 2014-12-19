@@ -105,7 +105,7 @@ var graphButton = newg.append("g")
     .attr("cursor", "pointer")
     .on("mousedown", buttonMouseDown)
     .on("mouseup", buttonMouseUp)
-    .on("click", function(d,i){return updateLineChart(i);});
+    .on("click", function(d,i){return updateLineChart(this, i);});
 
 graphButton.append("rect")
     .attr("x", function(d, i) { 
@@ -160,8 +160,8 @@ var dragBarTop = newg.append("rect")
     .attr("width", dragbarw)
     .attr("height", dragbarw)
 //  .style("stroke", "black")
-    .attr("fill", "url(#dragUpPattern)")
-    .attr("cursor", "ns-resize")
+    .style("fill", "url(#dragUpPattern)")
+    .style("cursor", "ns-resize")
     .style("visibility", "hidden")
     .style("fill-opacity", fullOpacity)
     .call(dragTop);
@@ -227,16 +227,16 @@ function tdragresize() {
     
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
-        maxNewy = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
+        maxHeight = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
         newHeight =  yScale(0) - maxNewy;
     
     var newValue = (newHeight * maxyAxis) / (lChartHeight/2) ;
         
     var id = d3.select(this.parentNode).select(".upperbox").attr("id");
 
-    d3.select(this).attr("y", maxNewy);              //new drag handle position   
+    d3.select(this).attr("y", maxHeight);              //new drag handle position   
     d3.select(this.parentNode).select(".upperbox")  //new box height and position
-        .attr("y", maxNewy)
+        .attr("y", maxHeight)
         .attr("height", newHeight);
    
    dataset[index].gain = newValue;
@@ -305,7 +305,8 @@ function buttonMouseUp(d) {
     d3.select(this).select("rect").style("fill-opacity", .5);
 }
 
-function updateLineChart(index) {
+function updateLineChart(element, index) {
+    removeChart();
     drawLineChart(index);
 }
                                                                                 

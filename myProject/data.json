@@ -1,7 +1,7 @@
 var dataset = [{
     unit : "kg",
-    min : 40,
-    norm : 30,
+    min : 30,
+    norm : 40,
     max : 90,
     loss : -50,
     gain : 75
@@ -35,9 +35,9 @@ var dataset = [{
     gain : 50
 }, {
     unit : "kg",
-    min : 15,
+    min : 0,
     norm : 30,
-    max : 90,
+    max : 100,
     loss : -100,
     gain : 100
 }];
