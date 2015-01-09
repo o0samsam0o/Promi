@@ -228,7 +228,7 @@ function tdragresize() {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
         maxHeight = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
-        newHeight =  yScale(0) - maxNewy;
+        newHeight =  yScale(0) - newy;
     
     var newValue = (newHeight * maxyAxis) / (lChartHeight/2) ;
         

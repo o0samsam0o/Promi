@@ -1476,3 +1476,27 @@ Command-line arguments:  -os win32 -ws win32 -arch x86
 
 !ENTRY org.eclipse.core.resources 2 10035 2014-12-18 11:00:27.442
 !MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+!SESSION 2014-12-19 09:14:43.846 -----------------------------------------------
+eclipse.buildId=3.6.1.201410201044
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=de_DE
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY com.aptana.git.core 4 1 2014-12-19 16:58:29.416
+!MESSAGE Errors occurred while refreshing git index
+!SUBENTRY 1 com.aptana.git.core 4 0 2014-12-19 16:58:29.416
+!MESSAGE Failed to acquire lock for git repository.
+!SUBENTRY 1 com.aptana.git.core 4 0 2014-12-19 16:58:29.416
+!MESSAGE Failed to acquire lock for git repository.
+!SUBENTRY 1 com.aptana.git.core 4 0 2014-12-19 16:58:29.416
+!MESSAGE Failed to acquire lock for git repository.
+!SESSION 2015-01-09 08:56:47.985 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_51
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=de_DE
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.core.resources 2 10035 2015-01-09 08:56:50.833
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
