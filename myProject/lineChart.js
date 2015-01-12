@@ -76,7 +76,7 @@ function drawLineChart(i) {
     //norm-line
     lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100)).style("stroke-width", 1).style("shape-rendering", "crispEdges").style("stroke", "lightgrey");
 
-    lineChart.selectAll("circle").data(selectedData).enter().append("circle").attr("r", 3.5).attr("cx", function(d) {
+    lineChart.selectAll("circle").data(selectedData).enter().append("circle").attr("r", 5.0).attr("cx", function(d) {
         return xScale(d.x);
     }).attr("cy", function(d) {
         return yScale(d.y);
@@ -101,29 +101,27 @@ function dragPoints() {
     var maxHeight = Math.min(yScale(-100), Math.max(newy, yScale(100))),
         maxWidth = Math.min(Math.max(newx, xScale(selectedData[0].x)), xScale(selectedData[2].x) ),
         newHeight = maxHeight - yScale(0);
-
-    d3.select(this).attr("cx", newx).attr("cy", newy);
-
     
      var newValuex = (maxWidth/lChartWidth) * (selectedData[2].x - selectedData[0].x) + selectedData[0].x;
      var newValuey = (newHeight * minyAxis) / (lChartHeight/2) ;
 
-     selectedData[index].x = newValuex;
-     selectedData[index].y = newValuey;
+    if(index == 0 || index == 2)
+    {
+        d3.select(this).attr("cy", maxHeight);
+        selectedData[index].y = newValuey;
+    }else if (index == 1)
+    {
+        d3.select(this).attr("cx", maxWidth).attr("cy", maxHeight);
+        selectedData[index].x = newValuex;
+        selectedData[index].y = newValuey;
+    }
+
 
     d3.selectAll(".lineChart").select(".area").datum(selectedData).attr("d", area);
     d3.selectAll(".lineChart").select(".norm").datum(selectedData).attr("x1",  xScale(selectedData[1].x) + lc_x).attr("x2",  xScale(selectedData[1].x) + lc_x);
     d3.selectAll(".lineChart").select(".line").attr("d", line(selectedData));
 
-    console.log("selectedData[0].x: " + xScale(selectedData[0].x));
-    console.log("newx: " + newx);
-    console.log("selectedData[2].x: " + xScale(selectedData[2].x));
 }
-
-
-function update(i) {
-    
-} 
 
 }
 
