@@ -17,6 +17,9 @@ function drawLineChart(i) {
         x : dataset[i].max,
         y : dataset[i].gain
     }];
+    
+    var minArray = [selectedData[0], selectedData[1]],
+        maxArray = [selectedData[1], selectedData[2]];
 
     var dragPoint = d3.behavior.drag().origin(Object).on("dragstart", function() {
         d3.select(this).attr("cursor", "move");
@@ -28,9 +31,7 @@ function drawLineChart(i) {
         lc_y = yScale(0) - lChartHeight / 2;
 
     //x axis
-    var xScale = d3.scale.linear().domain(d3.extent(selectedData, function(d) {
-        return d.x;
-    })).range([0, lChartWidth]);
+    var xScale = d3.scale.linear().domain([selectedData[0].x, selectedData[2].x]).range([0, lChartWidth]);
 
     var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
@@ -50,28 +51,11 @@ function drawLineChart(i) {
     //bring all the pieces together
     var lineChart = svg.append("g").attr("class", "lineChart");
 
-    lineChart.append("path").attr("class", "line").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(selectedData));
+    lineChart.append("path").attr("class", "minLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(minArray));
+    lineChart.append("path").attr("class", "maxLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(maxArray));
 
-    // Set the threshold
-    svg.append("linearGradient").attr("id", "area-gradient").attr("gradientUnits", "userSpaceOnUse").attr("x1", xScale(0)).attr("y1", yScale(-100)).attr("x2", xScale(0)).attr("y2", yScale(100)).selectAll("stop").data([{
-        offset : "0%",
-        color : yellyDark
-    }, {
-        offset : "50%",
-        color : yellyDark
-    }, {
-        offset : "50%",
-        color : grasDark
-    }, {
-        offset : "100%",
-        color : grasDark
-    }]).enter().append("stop").attr("offset", function(d) {
-        return d.offset;
-    }).attr("stop-color", function(d) {
-        return d.color;
-    });
-
-    lineChart.append("path").datum(selectedData).attr("class", "area").attr("transform", "translate(" + lc_x + ", 0)").attr("d", area).style("fill", "url(#area-gradient)");
+    lineChart.append("path").datum(minArray).attr("class", "minArea").attr("transform", "translate(" + lc_x + ", 0)").attr("d", area).style("fill", yellyDark);
+    lineChart.append("path").datum(maxArray).attr("class", "maxArea").attr("transform", "translate(" + lc_x + ", 0)").attr("d", area).style("fill", grasDark);
 
     //norm-line
     lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100));
@@ -111,15 +95,16 @@ function dragPoints() {
         selectedData[index].y = newValuey;
     }else if (index == 1)
     {
-        d3.select(this).attr("cx", maxWidth).attr("cy", maxHeight);
+        d3.select(this).attr("cx", maxWidth);
         selectedData[index].x = newValuex;
-        selectedData[index].y = newValuey;
     }
 
 
-    d3.selectAll(".lineChart").select(".area").datum(selectedData).attr("d", area);
+    d3.selectAll(".lineChart").select(".minArea").datum(minArray).attr("d", area);
+    d3.selectAll(".lineChart").select(".maxArea").datum(maxArray).attr("d", area);
     d3.selectAll(".lineChart").select(".norm").datum(selectedData).attr("x1",  xScale(selectedData[1].x) + lc_x).attr("x2",  xScale(selectedData[1].x) + lc_x);
-    d3.selectAll(".lineChart").select(".line").attr("d", line(selectedData));
+    d3.selectAll(".lineChart").select(".minLine").attr("d", line(minArray));
+    d3.selectAll(".lineChart").select(".maxLine").attr("d", line(maxArray));
 
 }
 
