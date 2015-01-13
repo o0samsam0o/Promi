@@ -25,7 +25,7 @@ svg {
 }
 
 .canvas {
-	fill: none;
+	fill: white;
 	stroke: grey;
 	shape-rendering: crispEdges;
 }

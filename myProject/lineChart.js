@@ -50,6 +50,7 @@ function drawLineChart(i) {
 
     //bring all the pieces together
     var lineChart = svg.append("g").attr("class", "lineChart");
+    lineChart.append("rect").attr("class", "canvas").attr("x", lc_x-1).attr("y", lc_y).attr("width", lChartWidth+1).attr("height", lChartHeight);
 
     lineChart.append("path").attr("class", "minLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(minArray));
     lineChart.append("path").attr("class", "maxLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(maxArray));
@@ -58,21 +59,24 @@ function drawLineChart(i) {
     lineChart.append("path").datum(maxArray).attr("class", "maxArea").attr("transform", "translate(" + lc_x + ", 0)").attr("d", area).style("fill", grasDark);
 
     //norm-line
-    lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100));
+    lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)+1).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100));
 
+    //min, norm, max points
     lineChart.selectAll("circle").data(selectedData).enter().append("circle").attr("class", "mainPoints").attr("r", 5.0).attr("cx", function(d) {
         return xScale(d.x);
     }).attr("cy", function(d) {
         return yScale(d.y);
     }).attr("transform", "translate(" + lc_x + ", 0)")
-    //.attr("visibility", "hidden")
     .attr("cursor", "pointer").call(dragPoint);
+    
+    //add points
+    lineChart.on("click", addPoint);
 
     lineChart.append("g").attr("class", "x axis").attr("transform", "translate(" + lc_x + "," + (yScale(0) + lChartHeight / 2) + ")").call(xAxis);
 
     lineChart.append("g").attr("class", "y axis").attr("transform", "translate(" + lc_x + ", 0)").call(yAxis);
 
-    lineChart.append("rect").attr("class", "canvas").attr("x", lc_x).attr("y", lc_y).attr("width", lChartWidth).attr("height", lChartHeight);
+    //lineChart.append("rect").attr("x", lc_x).attr("y", lc_y).attr("width", lChartWidth).attr("height", lChartHeight);
 
 
 function dragPoints() {
@@ -97,15 +101,54 @@ function dragPoints() {
     {
         d3.select(this).attr("cx", maxWidth);
         selectedData[index].x = newValuex;
+        console.log("newValuex " + newValuex);
     }
 
+    repaint();
 
+}
+
+function repaint(){
+    
     d3.selectAll(".lineChart").select(".minArea").datum(minArray).attr("d", area);
     d3.selectAll(".lineChart").select(".maxArea").datum(maxArray).attr("d", area);
     d3.selectAll(".lineChart").select(".norm").datum(selectedData).attr("x1",  xScale(selectedData[1].x) + lc_x).attr("x2",  xScale(selectedData[1].x) + lc_x);
     d3.selectAll(".lineChart").select(".minLine").attr("d", line(minArray));
     d3.selectAll(".lineChart").select(".maxLine").attr("d", line(maxArray));
+}
 
+function addPoint() {
+    var mx = d3.mouse(this)[0],
+        my = d3.mouse(this)[1];
+        
+    var newx = mx - lc_x,
+        newy = yScale.invert(d3.mouse(this)[1]);
+    
+    var newValuex = Math.round((newx/lChartWidth) * (selectedData[2].x - selectedData[0].x) + selectedData[0].x),
+        newValuey = Math.round(newy);
+        
+        if(newValuex < selectedData[1].x){
+            console.log("min");
+            minArray.push({x: newValuex, y: newValuey});
+            sortByKey(minArray, "x");
+            repaint();
+        }else{
+            console.log("max");
+            maxArray.push({x: newValuex, y: newValuey});
+            sortByKey(maxArray, "x");
+            repaint();
+        }
+        
+        
+        lineChart.append("circle").attr("class", "addedPoints").attr("r", 4.0).attr("cx", xScale(newValuex) + lc_x).attr("cy", yScale(newValuey)).attr("cursor", "pointer");
+        
+}
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
 }
 
 }
