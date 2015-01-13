@@ -74,9 +74,9 @@ function drawLineChart(i) {
     lineChart.append("path").datum(selectedData).attr("class", "area").attr("transform", "translate(" + lc_x + ", 0)").attr("d", area).style("fill", "url(#area-gradient)");
 
     //norm-line
-    lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100)).style("stroke-width", 1).style("shape-rendering", "crispEdges").style("stroke", "lightgrey");
+    lineChart.append("line").attr("class", "norm").attr("x1", xScale(selectedData[1].x) + lc_x).attr("y1", yScale(100)).attr("x2", xScale(selectedData[1].x) + lc_x).attr("y2", yScale(-100));
 
-    lineChart.selectAll("circle").data(selectedData).enter().append("circle").attr("r", 5.0).attr("cx", function(d) {
+    lineChart.selectAll("circle").data(selectedData).enter().append("circle").attr("class", "mainPoints").attr("r", 5.0).attr("cx", function(d) {
         return xScale(d.x);
     }).attr("cy", function(d) {
         return yScale(d.y);
@@ -84,11 +84,11 @@ function drawLineChart(i) {
     //.attr("visibility", "hidden")
     .attr("cursor", "pointer").call(dragPoint);
 
-    lineChart.append("g").attr("class", "x axis").attr("transform", "translate(" + lc_x + "," + (yScale(0) + lChartHeight / 2) + ")").style("stroke-dasharray", ("1, 20")).call(xAxis);
+    lineChart.append("g").attr("class", "x axis").attr("transform", "translate(" + lc_x + "," + (yScale(0) + lChartHeight / 2) + ")").call(xAxis);
 
-    lineChart.append("g").attr("class", "y axis").attr("transform", "translate(" + lc_x + ", 0)").style("stroke-dasharray", ("1, 25")).call(yAxis);
+    lineChart.append("g").attr("class", "y axis").attr("transform", "translate(" + lc_x + ", 0)").call(yAxis);
 
-    lineChart.append("rect").attr("x", lc_x).attr("y", lc_y).attr("width", lChartWidth).attr("height", lChartHeight).style("fill", "none").style("stroke", "grey").style("shape-rendering", "crispEdges");
+    lineChart.append("rect").attr("class", "canvas").attr("x", lc_x).attr("y", lc_y).attr("width", lChartWidth).attr("height", lChartHeight);
 
 
 function dragPoints() {

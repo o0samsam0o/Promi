@@ -16,12 +16,46 @@ svg {
   stroke: none;
 }
 
+.x  {
+	stroke-dasharray: 1, 20;
+}
+
+.y {
+	stroke-dasharray: 1, 25;
+}
+
+.canvas {
+	fill: none;
+	stroke: grey;
+	shape-rendering: crispEdges;
+}
+
 .line {
   fill: none;
   stroke: black;
   stroke-width: 1px;
 }
 
+.norm {
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+	stroke: lightgrey;
+}
+
 .tick text {
 	fill: grey;
+}
+
+.mainPoints {
+	cursor: pointer;
+	fill: white;
+	stroke: gray;
+  	stroke-width: 2px;
+}
+
+.addedPoints {
+	cursor: pointer;
+	fill: gray;
+	stroke: white;
+  	stroke-width: 2px;
 }
