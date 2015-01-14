@@ -24,7 +24,7 @@ svg {
 	stroke-dasharray: 1, 25;
 }
 
-.canvas {
+.bgrd {
 	fill: white;
 	stroke: grey;
 	shape-rendering: crispEdges;

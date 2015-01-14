@@ -105,7 +105,7 @@ var graphButton = newg.append("g")
     .attr("cursor", "pointer")
     .on("mousedown", buttonMouseDown)
     .on("mouseup", buttonMouseUp)
-    .on("click", function(d,i){return updateLineChart(this, i);});
+    .on("click", function(d,i){return updateLineChart(i);});
 
 graphButton.append("rect")
     .attr("x", function(d, i) { 
@@ -180,20 +180,6 @@ var dragBarBottom = newg.append("rect")
     .style("fill-opacity", fullOpacity)
     .call(dragBottom);
 
-//input boxes
-var inputBoxes = d3.select("body")
-    .data(dataset).enter()
-    .append("input")
-    .attr("type", "number")
-    .attr("id", function(d, i) {return "input_upperbox" + i;})
-    .attr("x", function(d, i) { return i * (boxWidth + padding) + margin.left;})
-    .attr("y", "100px")
-    .attr("min", 0)
-    .attr("max", 100)
-    .attr("step", "5")
-    .attr("value", function(d) { return d.gain;})
-    .on("input", function(d, i) { return updateUpperBoxHeight(i, this.value);});
-
 //append axes
 svg.append("line")//x-Axis
     .attr("class", "x axis")
@@ -228,7 +214,7 @@ function tdragresize() {
     var mousey = yScale.invert(d3.mouse(this)[1]), //scale mouse position
         newy = yScale(Math.round(mousey / grid) * grid), //snap to grid
         maxHeight = Math.max(Math.min(yScale(10), newy), yScale(100)), //upper(100) and lower(10) boundary
-        newHeight =  yScale(0) - newy;
+        newHeight =  yScale(0) - maxHeight;
     
     var newValue = (newHeight * maxyAxis) / (lChartHeight/2) ;
         
@@ -240,7 +226,6 @@ function tdragresize() {
         .attr("height", newHeight);
    
    dataset[index].gain = newValue;
-   updateInputBoxes(id, newValue);
    updateLineChart(index);
 }
 
@@ -305,7 +290,7 @@ function buttonMouseUp(d) {
     d3.select(this).select("rect").style("fill-opacity", .5);
 }
 
-function updateLineChart(element, index) {
+function updateLineChart(index) {
     removeChart();
     drawLineChart(index);
 }
@@ -324,9 +309,4 @@ function updateUpperBoxHeight(i, newHeight) {
    
 }
 
-function updateInputBoxes(i, value){
-    
-    d3.select("#input_" + i).attr("value", value);
-
-}
 

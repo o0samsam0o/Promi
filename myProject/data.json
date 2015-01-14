@@ -7,7 +7,7 @@ var dataset = [{
     gain : 75
 }, {
     unit : "kg",
-      min : 15,
+    min : 15,
     norm : 30,
     max : 90,
     loss : -50,
