@@ -49,7 +49,6 @@ var dragBottom = d3.behavior
     .on("dragend", dragend);
 
 //axes
-
 var yScale = d3.scale.linear()
     .domain([minyAxis, maxyAxis])
     .range([height / 2 + lChartHeight / 2, height / 2 - lChartHeight / 2]);

@@ -61,7 +61,7 @@ function drawLineChart(i) {
 
     //bring all the pieces together
     var lineChart = svg.append("g").attr("class", "lineChart");
-    lineChart.append("rect").attr("class", "bgrd").attr("x", lc_x ).attr("y", lc_y).attr("width", lChartWidth + 1).attr("height", lChartHeight);
+    lineChart.append("rect").attr("class", "bgrd").attr("x", lc_x -1).attr("y", lc_y).attr("width", lChartWidth + 1).attr("height", lChartHeight);
 
     lineChart.append("path").attr("class", "minLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(minArray));
     lineChart.append("path").attr("class", "maxLine").attr("transform", "translate(" + lc_x + ", 0)").attr("d", line(maxArray));
@@ -154,10 +154,14 @@ function drawLineChart(i) {
         var mousex = d3.mouse(this)[0],
             mousey = d3.mouse(this)[1];
 
-        //d3.select(this).attr("cy", mousey);
-        //d3.select(this).attr("cx", mousex);
+        d3.select(this).attr("cy", mousey);
+        d3.select(this).attr("cx", mousex);
 
         repaint();
+    }
+    
+    function deletePoints(){
+        
     }
 
     function repaint() {
